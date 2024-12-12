@@ -1,32 +1,45 @@
 package com.mygdx.game.Model;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Enum.EPlayerState;
+import com.mygdx.game.Utils.PlayerAnimationManager;
 
 public class Player {
-    private Texture texture;       // Textura do player
-    private Vector2 position;      // Posição do player
-    private boolean facingRight;   // Indica a direção para qual o player está virado
-    private float scale;           // Escala para aumentar/diminuir o tamanho da imagem
+    private Vector2 position;
+    private boolean facingRight;
+    private float scale;
 
-    public Player(String texturePath, float startX, float startY) {
-        texture = new Texture(texturePath);
+    private EPlayerState currentState;
+    private final PlayerAnimationManager animationManager;
+
+    public Player(float startX, float startY) {
         position = new Vector2(startX, startY);
-        facingRight = true; // Começa virado para a direita
-        scale = 1.5f;       // Escala padrão (1.5x maior)
+        facingRight = true;
+        scale = 5f;
+
+        animationManager = new PlayerAnimationManager();
+        currentState = EPlayerState.IDLE;
     }
 
     public void render(SpriteBatch batch, float cameraX, float cameraY) {
-        // Desenhar o player relativo ao centro da câmera
-        float renderX = cameraX - (texture.getWidth() * scale) / 2f;
-        float renderY = cameraY - (texture.getHeight() * scale) / 2f - 340;
+        TextureRegion currentFrame = animationManager.getCurrentFrame(currentState, currentState == EPlayerState.WALKING || currentState == EPlayerState.IDLE);
 
-        // Inverter a textura se estiver virado à esquerda
+        float renderX = cameraX - (currentFrame.getRegionWidth() * scale) / 2f;
+        float renderY = cameraY - (currentFrame.getRegionHeight() * scale) / 2f - 310;
+
         if (facingRight) {
-            batch.draw(texture, renderX, renderY, texture.getWidth() * scale, texture.getHeight() * scale);
+            batch.draw(currentFrame, renderX, renderY, currentFrame.getRegionWidth() * scale, currentFrame.getRegionHeight() * scale);
         } else {
-            batch.draw(texture, renderX + texture.getWidth() * scale, renderY, -texture.getWidth() * scale, texture.getHeight() * scale);
+            batch.draw(currentFrame, renderX + currentFrame.getRegionWidth() * scale, renderY, -currentFrame.getRegionWidth() * scale, currentFrame.getRegionHeight() * scale);
+        }
+    }
+
+    public void setState(EPlayerState newState) {
+        if (currentState != newState) {
+            currentState = newState;
+            animationManager.resetStateTime();
         }
     }
 
@@ -39,14 +52,6 @@ public class Player {
     }
 
     public void dispose() {
-        texture.dispose();
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public void setPosition(float x, float y) {
-        this.position.set(x, y);
+        // Libere recursos se necessário
     }
 }

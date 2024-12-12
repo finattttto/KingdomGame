@@ -64,5 +64,9 @@ public class ParallaxLayer {
         }
     }
 
+    public void dispose() {
+        texture.dispose();
+    }
+
 
 }
