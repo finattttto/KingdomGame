@@ -23,6 +23,11 @@ public class GameAssetManager {
         manager.load("player/ATTACK_1.png", Texture.class);
         manager.load("player/ATTACK_2.png", Texture.class);
         manager.load("player/ATTACK_3.png", Texture.class);
+        manager.load("player/DEATH.png", Texture.class);
+        manager.load("player/DEFEND.png", Texture.class);
+        manager.load("player/HURT.png", Texture.class);
+        manager.load("player/JUMP.png", Texture.class);
+        manager.load("player/RUN.png", Texture.class);
 
         manager.finishLoading();
     }

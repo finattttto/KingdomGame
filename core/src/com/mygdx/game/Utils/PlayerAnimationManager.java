@@ -25,6 +25,11 @@ public class PlayerAnimationManager {
         loadAnimation(EPlayerState.ATTACK_1, "ATTACK_1.png", 96, 84, 0.1f);
         loadAnimation(EPlayerState.ATTACK_2, "ATTACK_2.png", 96, 84, 0.1f);
         loadAnimation(EPlayerState.ATTACK_3, "ATTACK_3.png", 96, 84, 0.1f);
+        loadAnimation(EPlayerState.RUN, "RUN.png", 96, 84, 0.1f);
+        loadAnimation(EPlayerState.DEATH, "DEATH.png", 96, 84, 0.1f);
+        loadAnimation(EPlayerState.DEFEND, "DEFEND.png", 96, 84, 0.1f);
+        loadAnimation(EPlayerState.HURT, "HURT.png", 96, 84, 0.1f);
+        loadAnimation(EPlayerState.JUMP, "JUMP.png", 96, 84, 0.1f);
     }
 
     private void loadAnimation(EPlayerState state, String texturePath, int frameWidth, int frameHeight, float frameDuration) {
@@ -61,5 +66,13 @@ public class PlayerAnimationManager {
 
     public void resetStateTime() {
         stateTime = 0f;
+    }
+
+    public boolean isAnimationFinished(EPlayerState state) {
+        Animation<TextureRegion> animation = animations.get(state);
+        if (animation == null) {
+            throw new IllegalStateException("Animação não encontrada para o estado: " + state);
+        }
+        return stateTime >= animation.getAnimationDuration();
     }
 }

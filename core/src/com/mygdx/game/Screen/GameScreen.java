@@ -54,9 +54,8 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        int speed = 1000;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) camera.position.x -= speed * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) camera.position.x += speed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) camera.position.x -= player.getSpeed() * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) camera.position.x += player.getSpeed() * delta;
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);

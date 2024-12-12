@@ -1,5 +1,6 @@
 package com.mygdx.game.Controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.mygdx.game.Enum.EPlayerState;
@@ -12,16 +13,42 @@ public class PlayerController implements InputProcessor {
         this.player = player;
     }
 
+    private boolean isCtrlPressed;
+
     @Override
     public boolean keyDown(int keycode) {
+        if (player.isAttacking()) {
+            return false;
+        }
+
         switch (keycode) {
+            case Input.Keys.UP:
+                player.setState(EPlayerState.JUMP);
+                break;
             case Input.Keys.LEFT:
                 player.setFacingRight(false);
-                player.setState(EPlayerState.WALKING);
+                if (isCtrlPressed) {
+                    player.setState(EPlayerState.RUN);
+                } else {
+                    player.setState(EPlayerState.WALKING);
+                }
                 break;
             case Input.Keys.RIGHT:
                 player.setFacingRight(true);
-                player.setState(EPlayerState.WALKING);
+                if (isCtrlPressed) {
+                    player.setState(EPlayerState.RUN);
+                } else {
+                    player.setState(EPlayerState.WALKING);
+                }
+                break;
+            case Input.Keys.CONTROL_LEFT:
+            case Input.Keys.CONTROL_RIGHT:
+                isCtrlPressed = true;
+                if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                    player.setState(EPlayerState.RUN);
+                } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                    player.setState(EPlayerState.RUN);
+                }
                 break;
             case Input.Keys.A:
                 player.setState(EPlayerState.ATTACK_1);
@@ -32,19 +59,44 @@ public class PlayerController implements InputProcessor {
             case Input.Keys.D:
                 player.setState(EPlayerState.ATTACK_3);
                 break;
+                case Input.Keys.Z:
+                player.setState(EPlayerState.DEATH);
+                break;
+            case Input.Keys.X:
+                player.setState(EPlayerState.HURT);
+                break;
+                case Input.Keys.C:
+                player.setState(EPlayerState.DEFEND);
+                break;
         }
         return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
-            player.setState(EPlayerState.IDLE);
-        } else if (keycode == Input.Keys.A || keycode == Input.Keys.S || keycode == Input.Keys.D) {
-            player.setState(EPlayerState.IDLE);
+        switch (keycode) {
+            case Input.Keys.LEFT:
+            case Input.Keys.RIGHT:
+                if (isCtrlPressed) {
+                    player.setState(EPlayerState.IDLE);
+                } else {
+                    player.setState(EPlayerState.IDLE);
+                }
+                break;
+            case Input.Keys.CONTROL_LEFT:
+            case Input.Keys.CONTROL_RIGHT:
+                isCtrlPressed = false;
+                // Voltar para WALKING caso esteja pressionando LEFT ou RIGHT
+                if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                    player.setState(EPlayerState.WALKING);
+                } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                    player.setState(EPlayerState.WALKING);
+                }
+                break;
         }
         return true;
     }
+
 
 
     @Override
