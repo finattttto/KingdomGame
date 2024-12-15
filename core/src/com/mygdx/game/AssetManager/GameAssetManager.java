@@ -1,6 +1,8 @@
 package com.mygdx.game.AssetManager;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GameAssetManager {
@@ -28,6 +30,17 @@ public class GameAssetManager {
         manager.load("player/HURT.png", Texture.class);
         manager.load("player/JUMP.png", Texture.class);
         manager.load("player/RUN.png", Texture.class);
+
+        // sounds
+
+        manager.load("sounds/player/Step_grass.mp3", Sound.class);
+        manager.load("sounds/player/Sword_1.mp3", Sound.class);
+        manager.load("sounds/player/Sword_2.mp3", Sound.class);
+        manager.load("sounds/player/Hit_1.mp3", Sound.class);
+        manager.load("sounds/player/Death.mp3", Sound.class);
+        manager.load("sounds/player/Defend.mp3", Sound.class);
+
+        manager.load("music/Ambience.mp3", Music.class);
 
         manager.finishLoading();
     }

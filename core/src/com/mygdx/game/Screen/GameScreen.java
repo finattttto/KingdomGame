@@ -2,6 +2,7 @@ package com.mygdx.game.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -47,6 +48,8 @@ public class GameScreen implements Screen {
         player = new Player(1920 / 2f - 32, 1080 / 2f - 400);
         playerController = new PlayerController(player);
         Gdx.input.setInputProcessor(playerController);
+
+        this.game.setMusic(GameAssetManager.getManager().get("music/Ambience.mp3", Music.class));
     }
 
     @Override
