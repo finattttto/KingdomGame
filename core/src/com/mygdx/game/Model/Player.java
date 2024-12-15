@@ -2,8 +2,8 @@ package com.mygdx.game.Model;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.AssetManager.GameAssetManager;
 import com.mygdx.game.Enum.EPlayerState;
@@ -23,6 +23,8 @@ public class Player {
     private EPlayerState currentState;
     private final PlayerAnimationManager animationManager;
 
+    private Sprite currentSprite;
+
     private Sound sound;
     private Long soundId;
 
@@ -36,10 +38,13 @@ public class Player {
 
         isAttacking = false;
         isMoving = false;
+
+        // Inicializa o Sprite com um frame padrão
+        currentSprite = new Sprite(animationManager.getCurrentFrame(currentState, true));
+        currentSprite.setScale(scale);
     }
 
     public void render(SpriteBatch batch, float cameraX, float cameraY) {
-
         boolean looping = EnumSet.of(EPlayerState.WALKING, EPlayerState.IDLE, EPlayerState.RUN).contains(currentState);
 
         if (!looping && animationManager.isAnimationFinished(currentState)) {
@@ -47,20 +52,28 @@ public class Player {
             currentState = EPlayerState.IDLE;
         }
 
-        if(currentState == EPlayerState.RUN) {
+        if (currentState == EPlayerState.RUN) {
             speed = 2000f;
-        } else speed = 800f;
+        } else {
+            speed = 800f;
+        }
 
-        TextureRegion currentFrame = animationManager.getCurrentFrame(currentState, looping);
+        // att o frame atual e ajusta o Sprite
+        currentSprite.setRegion(animationManager.getCurrentFrame(currentState, looping));
 
-        float renderX = cameraX - (currentFrame.getRegionWidth() * scale) / 2f;
-        float renderY = cameraY - (currentFrame.getRegionHeight() * scale) / 2f - 310;
+        float renderX = cameraX - (currentSprite.getWidth() * scale) / 2f + 200;
+        float renderY = cameraY - (currentSprite.getHeight() * scale) / 2f - 130;
+
+        currentSprite.setPosition(renderX, renderY);
+        currentSprite.setScale(scale);
 
         if (facingRight) {
-            batch.draw(currentFrame, renderX, renderY, currentFrame.getRegionWidth() * scale, currentFrame.getRegionHeight() * scale);
+            currentSprite.setFlip(false, false);
         } else {
-            batch.draw(currentFrame, renderX + currentFrame.getRegionWidth() * scale, renderY, -currentFrame.getRegionWidth() * scale, currentFrame.getRegionHeight() * scale);
+            currentSprite.setFlip(true, false);
         }
+
+        currentSprite.draw(batch);
     }
 
     public void setState(EPlayerState newState) {
@@ -90,34 +103,34 @@ public class Player {
     }
 
     public void setSound(EPlayerState state) {
-        if(soundId != null) sound.stop(soundId);
+        if (soundId != null) sound.stop(soundId);
         switch (state) {
             case RUN:
             case WALKING:
-                sound = GameAssetManager.getManager().get( "sounds/player/Step_grass.mp3", Sound.class);
+                sound = GameAssetManager.getManager().get("sounds/player/Step_grass.mp3", Sound.class);
                 soundId = sound.play(state == EPlayerState.WALKING ? 0.1f : 0.3f);
                 sound.setPitch(soundId, state == EPlayerState.WALKING ? 1.2f : 1.3f);
                 sound.setLooping(soundId, true);
                 break;
             case ATTACK_1:
             case ATTACK_2:
-                sound = GameAssetManager.getManager().get( "sounds/player/Sword_1.mp3", Sound.class);
+                sound = GameAssetManager.getManager().get("sounds/player/Sword_1.mp3", Sound.class);
                 soundId = sound.play(0.7f);
                 break;
             case ATTACK_3:
-                sound = GameAssetManager.getManager().get( "sounds/player/Sword_2.mp3", Sound.class);
+                sound = GameAssetManager.getManager().get("sounds/player/Sword_2.mp3", Sound.class);
                 soundId = sound.play(0.8f);
                 break;
             case HURT:
-                sound = GameAssetManager.getManager().get( "sounds/player/Hit_1.mp3", Sound.class);
+                sound = GameAssetManager.getManager().get("sounds/player/Hit_1.mp3", Sound.class);
                 soundId = sound.play(0.8f);
                 break;
             case DEFEND:
-                sound = GameAssetManager.getManager().get( "sounds/player/Defend.mp3", Sound.class);
+                sound = GameAssetManager.getManager().get("sounds/player/Defend.mp3", Sound.class);
                 soundId = sound.play(0.8f);
                 break;
             default:
-                if(soundId != null) {
+                if (soundId != null) {
                     sound.stop(soundId);
                 }
         }
@@ -129,6 +142,7 @@ public class Player {
 
     public void setScale(float scale) {
         this.scale = scale;
+        currentSprite.setScale(scale);
     }
 
     public void dispose() {
