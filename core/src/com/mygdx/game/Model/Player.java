@@ -80,10 +80,11 @@ public class Player {
         if (isAttacking) return;
 
         if (currentState != newState) {
+            // muda o estado
             currentState = newState;
 
+            // aqui valida para que não repita uma animação enquanto outra esta sendo executada
             boolean attacking = EnumSet.of(EPlayerState.ATTACK_1, EPlayerState.ATTACK_2, EPlayerState.ATTACK_3).contains(currentState);
-
             if (attacking) {
                 isAttacking = true;
                 isMoving = false;
@@ -91,13 +92,13 @@ public class Player {
 
             if (newState == EPlayerState.WALKING) {
                 isMoving = true;
-
             } else if (newState == EPlayerState.IDLE) {
                 isMoving = false;
             }
 
             setSound(newState);
 
+            // reinicia a animação
             animationManager.resetStateTime();
         }
     }
@@ -163,5 +164,25 @@ public class Player {
 
     public float getSpeed() {
         return speed;
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public Sprite getCurrentSprite() {
+        return currentSprite;
+    }
+
+    public float getWidth() {
+        return currentSprite.getWidth() * scale;
+    }
+
+    public float getHeight() {
+        return currentSprite.getHeight() * scale;
     }
 }

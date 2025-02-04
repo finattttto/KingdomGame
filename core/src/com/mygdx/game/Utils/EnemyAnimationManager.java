@@ -6,34 +6,28 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.AssetManager.GameAssetManager;
-import com.mygdx.game.Enum.EPlayerState;
+import com.mygdx.game.Enum.EEnemyState;
 
 import java.util.EnumMap;
 
-public class PlayerAnimationManager {
-    //mapeia todos os estados e as animações
-    private final EnumMap<EPlayerState, Animation<Sprite>> animations;
+public class EnemyAnimationManager {
+    private final EnumMap<EEnemyState, Animation<Sprite>> animations;
     private float stateTime;
 
-    public PlayerAnimationManager() {
-        animations = new EnumMap<>(EPlayerState.class);
+    public EnemyAnimationManager() {
+        animations = new EnumMap<>(EEnemyState.class);
         stateTime = 0f;
 
-        loadAnimation(EPlayerState.IDLE, "IDLE.png", 96, 84, 0.2f);
-        loadAnimation(EPlayerState.WALKING, "WALK.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.ATTACK_1, "ATTACK_1.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.ATTACK_2, "ATTACK_2.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.ATTACK_3, "ATTACK_3.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.RUN, "RUN.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.DEATH, "DEATH.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.DEFEND, "DEFEND.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.HURT, "HURT.png", 96, 84, 0.1f);
-        loadAnimation(EPlayerState.JUMP, "JUMP.png", 96, 84, 0.1f);
+        loadAnimation(EEnemyState.IDLE, "IDLE.png", 96, 84, 0.2f);
+        loadAnimation(EEnemyState.RUN, "RUN.png", 96, 84, 0.1f);
+        loadAnimation(EEnemyState.DEATH, "DEATH.png", 96, 84, 0.1f);
+        loadAnimation(EEnemyState.ATTACK, "HURT.png", 96, 84, 0.1f);
+        loadAnimation(EEnemyState.HIT, "JUMP.png", 96, 84, 0.1f);
     }
 
     // carrega as animações
-    private void loadAnimation(EPlayerState state, String texturePath, int frameWidth, int frameHeight, float frameDuration) {
-        Texture spriteSheet = GameAssetManager.getManager().get("player/" + texturePath, Texture.class);
+    private void loadAnimation(EEnemyState state, String texturePath, int frameWidth, int frameHeight, float frameDuration) {
+        Texture spriteSheet = GameAssetManager.getManager().get("enemy/" + texturePath, Texture.class);
         TextureRegion[][] tempFrames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
 
         Array<Sprite> frames = new Array<>();
@@ -48,7 +42,7 @@ public class PlayerAnimationManager {
         animations.put(state, animation);
     }
 
-    public Sprite getCurrentFrame(EPlayerState state, boolean loop) {
+    public Sprite getCurrentFrame(EEnemyState state, boolean loop) {
         Animation<Sprite> animation = animations.get(state);
 
         if (animation == null) {
@@ -70,7 +64,7 @@ public class PlayerAnimationManager {
         stateTime = 0f;
     }
 
-    public boolean isAnimationFinished(EPlayerState state) {
+    public boolean isAnimationFinished(EEnemyState state) {
         Animation<Sprite> animation = animations.get(state);
         return stateTime >= animation.getAnimationDuration();
     }

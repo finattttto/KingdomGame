@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.AssetManager.GameAssetManager;
+import com.mygdx.game.Controller.ChestController;
+import com.mygdx.game.Controller.EnemyController;
 import com.mygdx.game.Controller.PlayerController;
 import com.mygdx.game.Model.Player;
 import com.mygdx.game.MyGdxGame;
@@ -24,7 +26,10 @@ public class GameScreen implements Screen {
     private ParallaxLayer[] layers;
     private Camera camera;
     private Player player;
+
     private PlayerController playerController;
+    private ChestController chestController;
+    private EnemyController enemyController;
 
     public GameScreen(MyGdxGame game) {
         this.game = game;
@@ -45,9 +50,13 @@ public class GameScreen implements Screen {
             layer.setCamera(camera);
         }
 
+        chestController = new ChestController(camera);
+
         player = new Player(1920 / 2f - 32, 1080 / 2f - 400);
         playerController = new PlayerController(player);
         Gdx.input.setInputProcessor(playerController);
+
+        enemyController = new EnemyController(camera, player);
 
         this.game.setMusic(GameAssetManager.getManager().get("music/Ambience.mp3", Music.class));
     }
@@ -67,6 +76,10 @@ public class GameScreen implements Screen {
         for (ParallaxLayer layer : layers) {
             layer.render(batch);
         }
+
+        chestController.isChestInCollisionArea(player);
+        chestController.render(batch);
+        enemyController.render(batch);
 
         player.render(batch, camera.position.x, camera.position.y);
         batch.end();
@@ -93,6 +106,8 @@ public class GameScreen implements Screen {
     public void dispose() {
         batch.dispose();
         player.dispose();
+        chestController.dispose();
+        enemyController.dispose();
         for (ParallaxLayer layer : layers) {
             layer.dispose();
         }
