@@ -34,6 +34,12 @@ public class GameAssetManager {
         manager.load("utils/treasure.png", Texture.class);
         manager.load("utils/enemy.png", Texture.class);
 
+        manager.load("enemy/ATTACK.png", Texture.class);
+        manager.load("enemy/DEATH.png", Texture.class);
+        manager.load("enemy/HIT.png", Texture.class);
+        manager.load("enemy/RUN.png", Texture.class);
+        manager.load("enemy/IDLE.png", Texture.class);
+
         // sounds
 
         manager.load("sounds/player/Step_grass.mp3", Sound.class);

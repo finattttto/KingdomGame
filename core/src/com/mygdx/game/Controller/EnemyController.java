@@ -19,6 +19,9 @@ public class EnemyController {
     public EnemyController(Camera camera, Player player) {
         this.camera = camera;
         getEnemies().add(new Enemy(camera, player, 3000f));
+        getEnemies().add(new Enemy(camera, player, 3500f));
+        getEnemies().add(new Enemy(camera, player, 3800f));
+        getEnemies().add(new Enemy(camera, player, 4000f));
 //        getEnemies().add(new Enemy(camera, player, 5000f));
 //        getEnemies().add(new Enemy(camera, player, 75000f));
     }

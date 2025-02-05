@@ -18,11 +18,11 @@ public class EnemyAnimationManager {
         animations = new EnumMap<>(EEnemyState.class);
         stateTime = 0f;
 
-        loadAnimation(EEnemyState.IDLE, "IDLE.png", 96, 84, 0.2f);
-        loadAnimation(EEnemyState.RUN, "RUN.png", 96, 84, 0.1f);
-        loadAnimation(EEnemyState.DEATH, "DEATH.png", 96, 84, 0.1f);
-        loadAnimation(EEnemyState.ATTACK, "HURT.png", 96, 84, 0.1f);
-        loadAnimation(EEnemyState.HIT, "JUMP.png", 96, 84, 0.1f);
+        loadAnimation(EEnemyState.IDLE, "IDLE.png", 150, 150, 0.2f);
+        loadAnimation(EEnemyState.RUN, "RUN.png", 150, 150, 0.1f);
+        loadAnimation(EEnemyState.DEATH, "DEATH.png", 150, 150, 0.1f);
+        loadAnimation(EEnemyState.ATTACK, "ATTACK.png", 150, 150, 0.1f);
+        loadAnimation(EEnemyState.HIT, "HIT.png", 150, 150, 0.1f);
     }
 
     // carrega as animações
