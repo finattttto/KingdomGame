@@ -19,6 +19,8 @@ public class Enemy {
     int life = 3;
     boolean death = false;
     boolean attackAccounted = false;
+    boolean isAttacking = false;
+    boolean isHiting = false;
     boolean facingRight = false;
 
     float enemyWorldX = 0f;
@@ -63,6 +65,8 @@ public class Enemy {
                 death = true;
                 return;
             }
+            isAttacking = false;
+            isHiting = false;
             setState(EEnemyState.IDLE);
         }
 
@@ -80,6 +84,8 @@ public class Enemy {
         currentSprite.draw(batch);
     }
 
+    int count = 0;
+
     public void updateState() {
         float distanceToPlayer = Math.abs(camera.position.x - enemyWorldX);
         float combatThreshold = 100f;
@@ -96,9 +102,17 @@ public class Enemy {
                 animationManager.resetStateTime();
                 attackAccounted = true;
                 life--;
-            } else if(!player.isAttacking()) {
-                attackAccounted = false;
-                setState(EEnemyState.IDLE);
+            } else  {
+                if(!player.isAttacking()) {
+                    attackAccounted = false;
+                }
+                count++;
+                if(count > 60) {
+                    setState(EEnemyState.ATTACK);
+                    count = 0;
+                } else {
+                    setState(EEnemyState.IDLE);
+                }
             }
         }
 
@@ -106,20 +120,30 @@ public class Enemy {
 
     public void setState(EEnemyState newState) {
         if (currentState != newState) {
+            if(isHiting) return;
+            if(isAttacking && newState != EEnemyState.HIT) return;
             currentState = newState;
             animationManager.resetStateTime();
+            count = 0;
+            if(newState == EEnemyState.ATTACK) {
+                isAttacking = true;
+            } else if(newState == EEnemyState.HIT) {
+                isHiting = true;
+            }
         }
     }
 
     private void moveTowardsPlayer() {
         if (camera.position.x >= enemyWorldX - 500f && camera.position.x <= enemyWorldX) {
-            currentState = EEnemyState.RUN;
+            setState(EEnemyState.RUN);
             facingRight = false;
             positionX -= 3f;
         } else if (camera.position.x > enemyWorldX && camera.position.x <= enemyWorldX + 500f) {
-            currentState = EEnemyState.RUN;
+            setState(EEnemyState.RUN);
             facingRight = true;
             positionX += 3f;
+        } else {
+            setState(EEnemyState.IDLE);
         }
     }
 
