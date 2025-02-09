@@ -1,5 +1,6 @@
 package com.mygdx.game.Utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.AssetManager.GameAssetManager;
 import com.mygdx.game.Enum.EEnemyState;
+import com.mygdx.game.MyGdxGame;
 
 import java.util.EnumMap;
 
@@ -21,7 +23,7 @@ public class EnemyAnimationManager {
         loadAnimation(EEnemyState.IDLE, "IDLE.png", 150, 150, 0.2f);
         loadAnimation(EEnemyState.RUN, "RUN.png", 150, 150, 0.1f);
         loadAnimation(EEnemyState.DEATH, "DEATH.png", 150, 150, 0.1f);
-        loadAnimation(EEnemyState.ATTACK, "ATTACK.png", 150, 150, 0.1f);
+        loadAnimation(EEnemyState.ATTACK, "ATTACK.png", 150, 150, 0.05f);
         loadAnimation(EEnemyState.HIT, "HIT.png", 150, 150, 0.1f);
     }
 

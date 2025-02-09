@@ -51,8 +51,10 @@ public class PlayerAnimationManager {
     public Sprite getCurrentFrame(EPlayerState state, boolean loop) {
         Animation<Sprite> animation = animations.get(state);
 
-        if (animation == null) {
-            throw new IllegalStateException("Animação não encontrada para o estado: " + state);
+        if (state == EPlayerState.DEATH) {
+            if (stateTime >= animation.getAnimationDuration() - 0.016f) {
+                return animation.getKeyFrame(animation.getAnimationDuration() - 0.016f, loop);
+            }
         }
 
         if (loop) {

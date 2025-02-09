@@ -3,57 +3,51 @@ package com.mygdx.game.Controller;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.mygdx.game.AssetManager.GameAssetManager;
-import com.mygdx.game.Model.Player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-
-
+import com.mygdx.game.Model.Player;
 
 
 public class ChestController {
     Camera camera;
+    Player player; // ta aqui so pra contabilizar os pontos
     Texture texture;
-    float chestWorldX = 0f;
-    float viewportWidth;
-
-    float scale = 0.15f;
-
-    boolean isConflicted = false;
-    boolean particleUsed = false;
-    TextureAtlas particleAtlas; //<-declara um atlas com a partícula
+    Texture coin;
     ParticleEffect effect;
 
+    float chestWorldX = 0f;
+    float chestYPosition = 0f;
+    float scaledHeight;
+    float scaledWidth;
 
-    public ChestController(Camera camera) {
-        this.texture = GameAssetManager.getManager().get("utils/treasure.png", Texture.class); // Carregue a textura do baú
+    float scale = 0.15f;
+    int treasurePoints = 0;
+    int coinTime = 0;
+
+    public ChestController(Camera camera, Player player) {
+        this.texture = GameAssetManager.getManager().get("utils/treasure.png", Texture.class);
+        this.coin = GameAssetManager.getManager().get("utils/coin.png", Texture.class);
         this.camera = camera;
-        this.viewportWidth = camera.viewportWidth;
+        this.player = player;
 
-        //TextureAtlas particleAtlas = new TextureAtlas(Gdx.files.internal("particle/particleAtlas.atlas"));
+        chestYPosition = -380;
+        chestWorldX = camera.position.x - 50;
+
+        scaledWidth = camera.viewportHeight * scale;
+        scaledHeight = scaledWidth / ((float) texture.getWidth() / texture.getHeight());
+
+        coin = GameAssetManager.getManager().get("utils/coin.png", Texture.class);
+
         effect = new ParticleEffect();
-        // effect.load(Gdx.files.internal("particle/test.p"), particleAtlas);
-        // effect.load(Gdx.files.internal("particle/test.p"), Gdx.files.internal("particle"));
         effect.load(Gdx.files.internal("gold/gold.p"), Gdx.files.internal("particle"));
-
+        effect.setPosition(chestWorldX + 85f, chestYPosition + 120f);
+        effect.start(); // start aqui, ou no render?
     }
 
     public void render(SpriteBatch batch) {
         if (camera == null) return;
-
-        float factor = 0.3f;
-        float textureAspectRatio = (float) texture.getWidth() / texture.getHeight();
-
-        float scaledWidth = camera.viewportHeight * scale;
-        float scaledHeight = scaledWidth / textureAspectRatio;
-
-        float xOffset = camera.position.x * factor;
-        float yOffset = camera.position.y * factor;
-
-        float chestYPosition = camera.position.y - camera.viewportHeight / 2 + yOffset + 160; // +160 para ir pra cima
-        chestWorldX = camera.position.x - viewportWidth / 2 + xOffset + 500;
 
         batch.draw(texture,
                 chestWorldX,
@@ -62,27 +56,41 @@ public class ChestController {
                 scaledHeight
         );
 
-        if(isConflicted) {
-            if(!particleUsed) {
-                effect.start();
-                particleUsed = true;
-            }
-            effect.start();
-            effect.setPosition(chestWorldX + 85f, chestYPosition + 120f);
+        if(isChestInCollisionArea()) {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
+            if(player.getCoinPoints() > 0) {
+                treasurePoints += player.getCoinPoints();
+                player.setCoinPoints(0);
+                coinTime = 60;
+            }
+        }
+
+        if(coinTime > 0) {
+            coinTime -= 2;
+            batch.draw(coin,
+                    chestWorldX + 50,
+                    -200 + -coinTime,
+                    (float) coin.getWidth() / 6,
+                    (float) coin.getHeight() / 6);
         }
     }
 
-    public void isChestInCollisionArea(Player player) {
-            float playerX = player.getPosition().x;
+    public boolean isChestInCollisionArea() {
             float chestX = chestWorldX;
-            if( playerX >= chestX - 500f && playerX <= chestX + 500f) {
-                isConflicted = true;
-            } else isConflicted = false;
+            float cameraX = camera.position.x;
+            return cameraX >= chestX - 100f && cameraX <= chestX + 250f;
     }
 
     public void dispose() {
         texture.dispose();
         effect.dispose();
+    }
+
+    public int getTreasurePoints() {
+        return treasurePoints;
+    }
+
+    public void setTreasurePoints(int treasurePoints) {
+        this.treasurePoints = treasurePoints;
     }
 }

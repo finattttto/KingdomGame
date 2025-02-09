@@ -4,7 +4,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.AssetManager.GameAssetManager;
 import com.mygdx.game.Enum.EPlayerState;
 import com.mygdx.game.Utils.PlayerAnimationManager;
@@ -12,11 +11,11 @@ import com.mygdx.game.Utils.PlayerAnimationManager;
 import java.util.EnumSet;
 
 public class Player {
-    private Vector2 position;
-    private boolean facingRight;
-    private float scale;
-    private boolean isAttacking;
-    private boolean isMoving;
+    private boolean facingRight = true;
+    private float scale = 5f;
+    private boolean isAttacking = false;
+    private boolean isMoving = false;
+    private boolean isWinner = false;
 
     private float speed = 1000f;
 
@@ -28,52 +27,52 @@ public class Player {
     private Sound sound;
     private Long soundId;
 
-    public Player(float startX, float startY) {
-        position = new Vector2(startX, startY);
-        facingRight = true;
-        scale = 5f;
+    private Integer coinPoints = 0;
+    private Integer life = 1;
 
+    private Texture coin;
+    private Integer coinTime = 0;
+
+
+    public Player() {
         animationManager = new PlayerAnimationManager();
         currentState = EPlayerState.IDLE;
-
-        isAttacking = false;
-        isMoving = false;
-
-        // Inicializa o Sprite com um frame padrão
+        // inicializa o Sprite com um frame parado
         currentSprite = new Sprite(animationManager.getCurrentFrame(currentState, true));
         currentSprite.setScale(scale);
+
+        coin = GameAssetManager.getManager().get("utils/coin.png", Texture.class);
     }
 
-    public void render(SpriteBatch batch, float cameraX, float cameraY) {
-        boolean looping = EnumSet.of(EPlayerState.WALKING, EPlayerState.IDLE, EPlayerState.RUN).contains(currentState);
+    public void render(SpriteBatch batch, float cameraX) {
+        boolean looping = EnumSet.of(EPlayerState.WALKING, EPlayerState.IDLE, EPlayerState.RUN, EPlayerState.DEATH).contains(currentState);
 
         if (!looping && animationManager.isAnimationFinished(currentState)) {
             isAttacking = false;
             currentState = EPlayerState.IDLE;
         }
 
-        if (currentState == EPlayerState.RUN) {
-            speed = 2000f;
-        } else {
-            speed = 800f;
-        }
+        if (currentState == EPlayerState.RUN) speed = 420f;
+        else speed = 230f;
 
         // att o frame atual e ajusta o Sprite
         currentSprite.setRegion(animationManager.getCurrentFrame(currentState, looping));
 
-        float renderX = cameraX - (currentSprite.getWidth() * scale) / 2f + 200;
-        float renderY = cameraY - (currentSprite.getHeight() * scale) / 2f - 130;
-
-        currentSprite.setPosition(renderX, renderY);
+        currentSprite.setPosition(cameraX, -340);
         currentSprite.setScale(scale);
 
-        if (facingRight) {
-            currentSprite.setFlip(false, false);
-        } else {
-            currentSprite.setFlip(true, false);
-        }
+        currentSprite.setFlip(!facingRight, false);
 
         currentSprite.draw(batch);
+
+        if(coinTime > 0) {
+            coinTime -= 4;
+            batch.draw(coin,
+                    cameraX + 30,
+                    -200 + -coinTime,
+                    (float) coin.getWidth() / 6,
+                    (float) coin.getHeight() / 6);
+        }
     }
 
     public void setState(EPlayerState newState) {
@@ -141,10 +140,20 @@ public class Player {
         this.facingRight = facingRight;
     }
 
-    public void setScale(float scale) {
-        this.scale = scale;
-        currentSprite.setScale(scale);
+    public void enemyEliminated() {
+        this.coinPoints++;
+        coinTime = 60;
     }
+
+    public void enemyAttacking() {
+        if(currentState != EPlayerState.DEFEND) {
+            life--;
+            if(life == 0) {
+                setState(EPlayerState.DEATH);
+            } else setState(EPlayerState.HURT);
+        }
+    }
+
 
     public void dispose() {
         sound.dispose();
@@ -154,35 +163,36 @@ public class Player {
         return isAttacking;
     }
 
-    public boolean isMoving() {
-        return isMoving;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
 
     public float getSpeed() {
         return speed;
     }
 
-    public Vector2 getPosition() {
-        return position;
+    public Integer getCoinPoints() {
+        return coinPoints;
     }
 
-    public float getScale() {
-        return scale;
+    public void setCoinPoints(Integer coinPoints) {
+        this.coinPoints = coinPoints;
     }
 
-    public Sprite getCurrentSprite() {
-        return currentSprite;
+    public Integer getLife() {
+        return life;
     }
 
-    public float getWidth() {
-        return currentSprite.getWidth() * scale;
+    public void setLife(Integer life) {
+        this.life = life;
     }
 
-    public float getHeight() {
-        return currentSprite.getHeight() * scale;
+    public boolean getPlayerIsDeath() {
+        return life == 0;
+    }
+
+    public boolean isWinner() {
+        return isWinner;
+    }
+
+    public void setWinner(boolean winner) {
+        isWinner = winner;
     }
 }

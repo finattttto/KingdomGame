@@ -30,9 +30,11 @@ public class GameAssetManager {
         manager.load("player/HURT.png", Texture.class);
         manager.load("player/JUMP.png", Texture.class);
         manager.load("player/RUN.png", Texture.class);
+        manager.load("player/HEADER.png", Texture.class);
 
         manager.load("utils/treasure.png", Texture.class);
-        manager.load("utils/enemy.png", Texture.class);
+        manager.load("utils/coin.png", Texture.class);
+        manager.load("utils/heart.png", Texture.class);
 
         manager.load("enemy/ATTACK.png", Texture.class);
         manager.load("enemy/DEATH.png", Texture.class);

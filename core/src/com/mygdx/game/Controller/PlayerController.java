@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.mygdx.game.Enum.EPlayerState;
 import com.mygdx.game.Model.Player;
+import com.mygdx.game.MyGdxGame;
 
 public class PlayerController implements InputProcessor {
     private Player player;
@@ -14,16 +15,25 @@ public class PlayerController implements InputProcessor {
     }
 
     private boolean isCtrlPressed;
+    public boolean restartGame;
 
     @Override
     public boolean keyDown(int keycode) {
+
+        if(player.getPlayerIsDeath() || player.isWinner()) {
+            if(keycode == Input.Keys.ENTER) {
+                restartGame = true;
+            }
+            return false;
+        }
+
         if (player.isAttacking()) {
             return false;
         }
 
         switch (keycode) {
             case Input.Keys.UP:
-                player.setState(EPlayerState.JUMP);
+                // player.setState(EPlayerState.JUMP);
                 break;
             case Input.Keys.LEFT:
                 player.setFacingRight(false);
@@ -59,13 +69,13 @@ public class PlayerController implements InputProcessor {
             case Input.Keys.D:
                 player.setState(EPlayerState.ATTACK_3);
                 break;
-                case Input.Keys.Z:
-                player.setState(EPlayerState.DEATH);
-                break;
-            case Input.Keys.X:
-                player.setState(EPlayerState.HURT);
-                break;
-                case Input.Keys.C:
+//                case Input.Keys.Z:
+//                player.setState(EPlayerState.DEATH);
+//                break;
+//            case Input.Keys.X:
+//                player.setState(EPlayerState.HURT);
+//                break;
+            case Input.Keys.C:
                 player.setState(EPlayerState.DEFEND);
                 break;
         }

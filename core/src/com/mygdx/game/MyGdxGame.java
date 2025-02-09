@@ -27,6 +27,10 @@ public class MyGdxGame extends Game {
 		music.dispose();
 	}
 
+	public void restart() {
+
+	}
+
 	public void setMusic(Music music) {
 		this.music = music;
 		music.play();
