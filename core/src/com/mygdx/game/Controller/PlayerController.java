@@ -32,9 +32,6 @@ public class PlayerController implements InputProcessor {
         }
 
         switch (keycode) {
-            case Input.Keys.UP:
-                // player.setState(EPlayerState.JUMP);
-                break;
             case Input.Keys.LEFT:
                 player.setFacingRight(false);
                 if (isCtrlPressed) {
@@ -69,12 +66,6 @@ public class PlayerController implements InputProcessor {
             case Input.Keys.D:
                 player.setState(EPlayerState.ATTACK_3);
                 break;
-//                case Input.Keys.Z:
-//                player.setState(EPlayerState.DEATH);
-//                break;
-//            case Input.Keys.X:
-//                player.setState(EPlayerState.HURT);
-//                break;
             case Input.Keys.C:
                 player.setState(EPlayerState.DEFEND);
                 break;

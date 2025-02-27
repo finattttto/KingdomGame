@@ -80,6 +80,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) camera.position.x -= player.getSpeed() * delta;
         camera.update();
 
+        // para garantir que o batch desenhe os elementos usando a matriz de projeção da câmera
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 

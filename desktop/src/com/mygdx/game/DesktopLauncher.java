@@ -12,9 +12,9 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("KingdomGame");
 
-		config.setWindowedMode(1200, 720);
+		//config.setWindowedMode(1200, 720);
 		//config.setWindowedMode(1920, 1080);
-		//config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+		config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 
 		new Lwjgl3Application(new MyGdxGame(), config);
 	}
