@@ -63,6 +63,8 @@ public class ChestController {
                 player.setCoinPoints(0);
                 coinTime = 60;
             }
+        } else {
+            effect.reset();
         }
 
         if(coinTime > 0) {

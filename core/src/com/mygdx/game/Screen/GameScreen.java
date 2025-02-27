@@ -98,7 +98,7 @@ public class GameScreen implements Screen {
             font.draw(batch, "Você morreu", camera.position.x - 170, camera.position.y + 130);
         }
 
-        if(chestController.getTreasurePoints() >= 3) {
+        if(chestController.getTreasurePoints() >= 10) {
             player.setWinner(true);
             font.setColor(Color.GOLD);
             font.draw(batch, "Você venceu!", camera.position.x - 170, camera.position.y + 130);

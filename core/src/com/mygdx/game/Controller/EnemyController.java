@@ -19,24 +19,17 @@ public class EnemyController {
     public EnemyController(Camera camera, Player player) {
         this.camera = camera;
         getEnemies().add(new Enemy(camera, player, 1000f));
-        getEnemies().add(new Enemy(camera, player, 1200f));
-        getEnemies().add(new Enemy(camera, player, 1300f));
-        getEnemies().add(new Enemy(camera, player, 1400f));
         getEnemies().add(new Enemy(camera, player, 1500f));
-        getEnemies().add(new Enemy(camera, player, 1600f));
-        getEnemies().add(new Enemy(camera, player, 1700f));
         getEnemies().add(new Enemy(camera, player, 1800f));
-        getEnemies().add(new Enemy(camera, player, 1900f));
-        getEnemies().add(new Enemy(camera, player, 2000f));
         getEnemies().add(new Enemy(camera, player, 2100f));
-        getEnemies().add(new Enemy(camera, player, 2200f));
-        getEnemies().add(new Enemy(camera, player, 2300f));
-        getEnemies().add(new Enemy(camera, player, 2400f));
-//        getEnemies().add(new Enemy(camera, player, 3500f));
-//        getEnemies().add(new Enemy(camera, player, 3800f));
-//        getEnemies().add(new Enemy(camera, player, 4000f));
-//        getEnemies().add(new Enemy(camera, player, 5000f));
-//        getEnemies().add(new Enemy(camera, player, 75000f));
+        getEnemies().add(new Enemy(camera, player, 2500f));
+        getEnemies().add(new Enemy(camera, player, 2800f));
+        getEnemies().add(new Enemy(camera, player, -1100f));
+        getEnemies().add(new Enemy(camera, player, -1400f));
+        getEnemies().add(new Enemy(camera, player, -1800f));
+        getEnemies().add(new Enemy(camera, player, -2000f));
+        getEnemies().add(new Enemy(camera, player, -2600f));
+        getEnemies().add(new Enemy(camera, player, -3000f));
     }
 
     public void render(SpriteBatch batch) {

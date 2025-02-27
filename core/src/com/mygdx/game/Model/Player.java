@@ -28,7 +28,7 @@ public class Player {
     private Long soundId;
 
     private Integer coinPoints = 0;
-    private Integer life = 1;
+    private Integer life = 3;
 
     private Texture coin;
     private Integer coinTime = 0;
